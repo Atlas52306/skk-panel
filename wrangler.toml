@@ -33,11 +33,11 @@ binding = "NAV_LINKS"
 
 # KV 命名空间 ID，从 Cloudflare Dashboard 获取
 # 生产环境使用的 KV 命名空间 ID
-id = "your-kv-namespace-id-here"
+id = "0efd8eeb63274bc2b3ee654c84d0a45c"
 
 # 预览环境使用的 KV 命名空间 ID
 # 可以与生产环境使用相同的 ID，也可以使用单独的测试环境 ID
-preview_id = "your-preview-kv-namespace-id-here"
+#preview_id = "your-preview-kv-namespace-id-here"
 
 # 自定义域名配置（可选）
 # 如果您想使用自己的域名而不是 workers.dev 子域名，请取消下面的注释并填写您的域名
