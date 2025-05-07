@@ -2108,6 +2108,12 @@ const ADMIN_HTML = `
     async function saveAnnouncement(event) {
       event.preventDefault();
       
+      // 获取提交按钮并禁用，防止重复提交
+      const submitBtn = document.getElementById('saveAnnouncementBtn');
+      const originalBtnText = submitBtn.innerHTML;
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> 处理中...';
+      
       const title = document.getElementById('announcementTitle').value;
       const content = document.getElementById('announcementContent').value;
       // 固定使用fa-bullhorn图标
@@ -2138,6 +2144,9 @@ const ADMIN_HTML = `
         showMessage(isEditing ? '公告更新成功！' : '公告添加成功！', 'success');
       } catch (error) {
         showMessage(error.message, 'danger');
+        // 恢复按钮状态
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = originalBtnText;
       }
     }
     
@@ -2194,6 +2203,15 @@ const ADMIN_HTML = `
     
     // 删除公告
     async function deleteAnnouncement(id) {
+      // 禁用所有删除按钮，防止重复点击
+      const deleteButtons = document.querySelectorAll('.delete-announcement');
+      deleteButtons.forEach(btn => {
+        btn.disabled = true;
+        if (btn.getAttribute('data-id') === id) {
+          btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> 删除中...';
+        }
+      });
+      
       try {
         const response = await fetch('/api/announcements/' + id, {
           method: 'DELETE'
@@ -2208,6 +2226,13 @@ const ADMIN_HTML = `
         showMessage('公告删除成功！', 'success');
       } catch (error) {
         showMessage(error.message, 'danger');
+        // 恢复所有删除按钮
+        deleteButtons.forEach(btn => {
+          btn.disabled = false;
+          if (btn.getAttribute('data-id') === id) {
+            btn.innerHTML = '<i class="fas fa-trash-alt"></i> 删除';
+          }
+        });
       }
     }
     
@@ -2294,6 +2319,12 @@ const ADMIN_HTML = `
     async function saveNavLink(event) {
       event.preventDefault();
       
+      // 获取提交按钮并禁用，防止重复提交
+      const submitBtn = document.getElementById('saveBtn');
+      const originalBtnText = submitBtn.innerHTML;
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> 处理中...';
+      
       const title = document.getElementById('title').value;
       const url = document.getElementById('url').value;
       const category = document.getElementById('category').value;
@@ -2324,6 +2355,9 @@ const ADMIN_HTML = `
         showMessage(isEditing ? '更新成功！' : '添加成功！', 'success');
       } catch (error) {
         showMessage(error.message, 'danger');
+        // 恢复按钮状态
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = originalBtnText;
       }
     }
 
@@ -2347,6 +2381,15 @@ const ADMIN_HTML = `
 
     // 删除导航链接
     async function deleteNavLink(id) {
+      // 禁用所有删除按钮，防止重复点击
+      const deleteButtons = document.querySelectorAll('.btn-delete');
+      deleteButtons.forEach(btn => {
+        btn.disabled = true;
+        if (btn.getAttribute('data-id') === id) {
+          btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> 删除中...';
+        }
+      });
+      
       try {
         const response = await fetch('/api/links/' + id, {
           method: 'DELETE'
@@ -2361,6 +2404,13 @@ const ADMIN_HTML = `
         showMessage('删除成功！', 'success');
       } catch (error) {
         showMessage(error.message, 'danger');
+        // 恢复所有删除按钮
+        deleteButtons.forEach(btn => {
+          btn.disabled = false;
+          if (btn.getAttribute('data-id') === id) {
+            btn.innerHTML = '<i class="fas fa-trash-alt"></i> 删除';
+          }
+        });
       }
     }
 
@@ -2368,7 +2418,11 @@ const ADMIN_HTML = `
     function resetForm() {
       document.getElementById('addForm').reset();
       document.getElementById('editId').value = '';
-      document.getElementById('saveBtn').innerHTML = '<i class="fas fa-save"></i> 保存';
+      
+      // 恢复保存按钮状态
+      const saveBtn = document.getElementById('saveBtn');
+      saveBtn.disabled = false;
+      saveBtn.innerHTML = '<i class="fas fa-save"></i> 保存';
       document.getElementById('modalTitle').textContent = '添加导航链接';
       closeModal();
     }
@@ -2789,6 +2843,12 @@ const LOGIN_HTML = `
     document.getElementById('loginForm').addEventListener('submit', async function(event) {
       event.preventDefault();
       
+      // 获取登录按钮并禁用，防止重复提交
+      const submitBtn = this.querySelector('button[type="submit"]');
+      const originalBtnText = submitBtn.innerHTML;
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> 登录中...';
+      
       const password = document.getElementById('password').value;
       
       try {
@@ -2808,6 +2868,10 @@ const LOGIN_HTML = `
       } catch (error) {
         const messageEl = document.getElementById('message');
         messageEl.innerHTML = '<div class="alert alert-danger"><i class="fas fa-exclamation-circle"></i> ' + error.message + '</div>';
+        
+        // 恢复按钮状态
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = originalBtnText;
       }
     });
   </script>
