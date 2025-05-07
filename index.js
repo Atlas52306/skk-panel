@@ -2204,10 +2204,12 @@ const ADMIN_HTML = `
     // 删除公告
     async function deleteAnnouncement(id) {
       // 禁用所有删除按钮，防止重复点击
-      const deleteButtons = document.querySelectorAll('.delete-announcement');
+      const deleteButtons = document.querySelectorAll('button.delete-announcement');
       deleteButtons.forEach(btn => {
         btn.disabled = true;
         if (btn.getAttribute('data-id') === id) {
+          const originalHTML = btn.innerHTML;
+          btn.setAttribute('data-original-html', originalHTML);
           btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> 删除中...';
         }
       });
@@ -2230,7 +2232,8 @@ const ADMIN_HTML = `
         deleteButtons.forEach(btn => {
           btn.disabled = false;
           if (btn.getAttribute('data-id') === id) {
-            btn.innerHTML = '<i class="fas fa-trash-alt"></i> 删除';
+            const originalHTML = btn.getAttribute('data-original-html') || '<i class="fas fa-trash-alt"></i> 删除';
+            btn.innerHTML = originalHTML;
           }
         });
       }
@@ -2381,11 +2384,14 @@ const ADMIN_HTML = `
 
     // 删除导航链接
     async function deleteNavLink(id) {
-      // 禁用所有删除按钮，防止重复点击
-      const deleteButtons = document.querySelectorAll('.btn-delete');
+      // 禁用所有导航链接的删除按钮，防止重复点击
+      // 使用更精确的选择器，只选择导航链接的删除按钮
+      const deleteButtons = document.querySelectorAll('#navGrid .btn-delete');
       deleteButtons.forEach(btn => {
         btn.disabled = true;
         if (btn.getAttribute('data-id') === id) {
+          const originalHTML = btn.innerHTML;
+          btn.setAttribute('data-original-html', originalHTML);
           btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> 删除中...';
         }
       });
@@ -2408,7 +2414,8 @@ const ADMIN_HTML = `
         deleteButtons.forEach(btn => {
           btn.disabled = false;
           if (btn.getAttribute('data-id') === id) {
-            btn.innerHTML = '<i class="fas fa-trash-alt"></i> 删除';
+            const originalHTML = btn.getAttribute('data-original-html') || '<i class="fas fa-trash-alt"></i> 删除';
+            btn.innerHTML = originalHTML;
           }
         });
       }
