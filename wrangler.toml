@@ -19,11 +19,11 @@ main = "index.js"
 # 环境变量配置
 [vars]
 # 管理界面登录密码，请修改为强密码
-AUTH_PASSWORD = "your-secure-password-here"
+AUTH_PASSWORD = ""
 
 # API 调用密钥，用于验证外部 API 请求
 # 请设置为复杂的随机字符串
-API_KEY = "your-secure-api-key-here"
+API_KEY = ""
 
 # KV 命名空间配置
 # 用于存储导航链接和公告数据
