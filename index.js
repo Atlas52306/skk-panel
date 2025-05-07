@@ -2956,15 +2956,36 @@ async function handleLogin(request, env) {
   if (contentType && contentType.includes('application/json')) {
     body = await request.json();
   } else {
-    return new Response('请提供JSON格式的请求体', { status: 400 });
+    return new Response(JSON.stringify({
+      success: false,
+      message: '请提供JSON格式的请求体',
+      error: 'INVALID_CONTENT_TYPE'
+    }), { 
+      status: 400,
+      headers: { 'Content-Type': 'application/json' }
+    });
   }
   
   if (!body || !body.password) {
-    return new Response('请提供密码', { status: 400 });
+    return new Response(JSON.stringify({
+      success: false,
+      message: '请提供密码',
+      error: 'MISSING_PASSWORD'
+    }), { 
+      status: 400,
+      headers: { 'Content-Type': 'application/json' }
+    });
   }
   
   if (body.password !== env.AUTH_PASSWORD) {
-    return new Response('密码错误', { status: 401 });
+    return new Response(JSON.stringify({
+      success: false,
+      message: '密码错误',
+      error: 'INVALID_PASSWORD'
+    }), { 
+      status: 401,
+      headers: { 'Content-Type': 'application/json' }
+    });
   }
   
   const sessionToken = await createSession(env);
@@ -3207,7 +3228,14 @@ export default {
         // 验证API密钥
         const apiKey = request.headers.get('X-API-Key');
         if (!apiKey || apiKey !== env.API_KEY) {
-          return new Response('API密钥无效', { status: 401 });
+          return new Response(JSON.stringify({
+            success: false,
+            message: 'API密钥无效',
+            error: 'INVALID_API_KEY'
+          }), { 
+            status: 401,
+            headers: { 'Content-Type': 'application/json' }
+          });
         }
         
         // 对外新增/更新导航链接
@@ -3224,7 +3252,14 @@ export default {
       // 除登录和对外API外的所有API都需要验证会话
       const isAuthenticated = await validateSession(request, env);
       if (!isAuthenticated) {
-        return new Response('未授权', { status: 401 });
+        return new Response(JSON.stringify({
+          success: false,
+          message: '未授权',
+          error: 'UNAUTHORIZED'
+        }), { 
+          status: 401,
+          headers: { 'Content-Type': 'application/json' }
+        });
       }
       
       // 退出登录API
@@ -3287,7 +3322,14 @@ export default {
       }
     }
     
-    return new Response('Not Found', { status: 404 });
+    return new Response(JSON.stringify({
+      success: false,
+      message: '未找到请求的资源',
+      error: 'NOT_FOUND'
+    }), { 
+      status: 404,
+      headers: { 'Content-Type': 'application/json' }
+    });
   }
 };
 
@@ -3299,11 +3341,25 @@ async function handleExternalNavLink(request, env) {
   if (contentType && contentType.includes('application/json')) {
     body = await request.json();
   } else {
-    return new Response('请提供JSON格式的请求体', { status: 400 });
+    return new Response(JSON.stringify({
+      success: false,
+      message: '请提供JSON格式的请求体',
+      error: 'INVALID_CONTENT_TYPE'
+    }), { 
+      status: 400,
+      headers: { 'Content-Type': 'application/json' }
+    });
   }
   
   if (!body || !body.title || !body.url) {
-    return new Response('标题和URL是必填项', { status: 400 });
+    return new Response(JSON.stringify({
+      success: false,
+      message: '标题和URL是必填项',
+      error: 'MISSING_REQUIRED_FIELDS'
+    }), { 
+      status: 400,
+      headers: { 'Content-Type': 'application/json' }
+    });
   }
   
   // 如果提供了ID，则更新现有链接，否则创建新链接
@@ -3312,12 +3368,23 @@ async function handleExternalNavLink(request, env) {
     const existing = await env.NAV_LINKS.get(key);
     
     if (!existing) {
-      return new Response('导航链接不存在', { status: 404 });
+      return new Response(JSON.stringify({
+      success: false,
+      message: '导航链接不存在',
+      error: 'NOT_FOUND'
+    }), { 
+      status: 404,
+      headers: { 'Content-Type': 'application/json' }
+    });
     }
     
     await env.NAV_LINKS.put(key, JSON.stringify(body));
     
-    return new Response(JSON.stringify({ id: body.id, ...body }), {
+    return new Response(JSON.stringify({
+      success: true,
+      message: '导航链接已更新',
+      data: { id: body.id, ...body }
+    }), {
       headers: { 'Content-Type': 'application/json' }
     });
   } else {
@@ -3327,7 +3394,11 @@ async function handleExternalNavLink(request, env) {
     
     await env.NAV_LINKS.put(key, JSON.stringify(body));
     
-    return new Response(JSON.stringify({ id, ...body }), {
+    return new Response(JSON.stringify({
+      success: true,
+      message: '导航链接已保存',
+      data: { id, ...body }
+    }), {
       headers: { 'Content-Type': 'application/json' }
     });
   }
@@ -3341,11 +3412,25 @@ async function handleExternalAnnouncement(request, env) {
   if (contentType && contentType.includes('application/json')) {
     body = await request.json();
   } else {
-    return new Response('请提供JSON格式的请求体', { status: 400 });
+    return new Response(JSON.stringify({
+      success: false,
+      message: '请提供JSON格式的请求体',
+      error: 'INVALID_CONTENT_TYPE'
+    }), { 
+      status: 400,
+      headers: { 'Content-Type': 'application/json' }
+    });
   }
   
   if (!body || !body.title || !body.content) {
-    return new Response('标题和内容是必填项', { status: 400 });
+    return new Response(JSON.stringify({
+      success: false,
+      message: '标题和内容是必填项',
+      error: 'MISSING_REQUIRED_FIELDS'
+    }), { 
+      status: 400,
+      headers: { 'Content-Type': 'application/json' }
+    });
   }
   
   // 如果提供了ID，则更新现有公告，否则创建新公告
@@ -3354,7 +3439,14 @@ async function handleExternalAnnouncement(request, env) {
     const existing = await env.NAV_LINKS.get(key);
     
     if (!existing) {
-      return new Response('公告不存在', { status: 404 });
+      return new Response(JSON.stringify({
+      success: false,
+      message: '公告不存在',
+      error: 'NOT_FOUND'
+    }), { 
+      status: 404,
+      headers: { 'Content-Type': 'application/json' }
+    });
     }
     
     // 构建公告对象，保留原创建时间
@@ -3368,7 +3460,11 @@ async function handleExternalAnnouncement(request, env) {
     
     await env.NAV_LINKS.put(key, JSON.stringify(announcement));
     
-    return new Response(JSON.stringify({ id: body.id, ...announcement }), {
+    return new Response(JSON.stringify({
+      success: true,
+      message: '公告已更新',
+      data: { id: body.id, ...announcement }
+    }), {
       headers: { 'Content-Type': 'application/json' }
     });
   } else {
@@ -3386,7 +3482,11 @@ async function handleExternalAnnouncement(request, env) {
     
     await env.NAV_LINKS.put(key, JSON.stringify(announcement));
     
-    return new Response(JSON.stringify({ id, ...announcement }), {
+    return new Response(JSON.stringify({
+      success: true,
+      message: '公告已保存',
+      data: { id, ...announcement }
+    }), {
       headers: { 'Content-Type': 'application/json' }
     });
   }
