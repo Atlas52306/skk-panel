@@ -224,7 +224,7 @@ X-API-Key: your-secure-api-key-here
 
 ## 注意事项
 
-- 请确保`wrangler.toml`中的`AUTH_PASSWORD`设置为强密码
+- 请确保`AUTH_PASSWORD`设置为强密码
 - API密钥应妥善保管，避免泄露
 - 所有API接口都需要通过API密钥验证
 - KV存储有读写次数限制，请参考Cloudflare的官方文档
