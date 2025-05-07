@@ -1,0 +1,46 @@
+# Cloudflare Worker 项目配置示例文件
+# 将此文件重命名为 wrangler.toml 并根据您的需求修改配置
+
+# 项目名称，将用作 Worker 的子域名（例如：https://skk-panel.your-account.workers.dev）
+name = "skk-panel"
+
+# 是否启用 workers.dev 域名
+# true: 启用 workers.dev 域名访问
+# false: 仅使用自定义域名访问
+workers_dev = true
+
+# 兼容性日期，指定 Worker 运行时的功能集
+# 建议使用较新的日期以获取最新功能
+compatibility_date = "2023-01-01"
+
+# 主文件路径，Worker 的入口文件
+main = "index.js"
+
+# 环境变量配置
+[vars]
+# 管理界面登录密码，请修改为强密码
+AUTH_PASSWORD = "your-secure-password-here"
+
+# API 调用密钥，用于验证外部 API 请求
+# 请设置为复杂的随机字符串
+API_KEY = "your-secure-api-key-here"
+
+# KV 命名空间配置
+# 用于存储导航链接和公告数据
+[[kv_namespaces]]
+# KV 绑定名称，在代码中使用此名称访问 KV 存储
+binding = "NAV_LINKS"
+
+# KV 命名空间 ID，从 Cloudflare Dashboard 获取
+# 生产环境使用的 KV 命名空间 ID
+id = "your-kv-namespace-id-here"
+
+# 预览环境使用的 KV 命名空间 ID
+# 可以与生产环境使用相同的 ID，也可以使用单独的测试环境 ID
+preview_id = "your-preview-kv-namespace-id-here"
+
+# 自定义域名配置（可选）
+# 如果您想使用自己的域名而不是 workers.dev 子域名，请取消下面的注释并填写您的域名
+# [route]
+# pattern = "your-domain.com/*"
+# zone_id = "your-zone-id-here"
